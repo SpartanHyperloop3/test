@@ -4,7 +4,7 @@ import time
 import network
 
 SERVER_IP = "192.168.3.10"
-DEVICE = "server"
+DEVICE = "server" # "client"
 
 def output():
     logging.debug("output function")
