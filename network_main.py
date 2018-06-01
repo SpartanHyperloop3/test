@@ -22,4 +22,3 @@ logging.debug(network_test.isConnected())
 while True:
     time.sleep(2)
     logging.debug(network_test.isConnected())
-#another small change
