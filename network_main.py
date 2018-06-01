@@ -3,22 +3,25 @@ import time
 
 import network
 
-LOCAL_IP = "192.168.3.10"
+SERVER_IP = "192.168.3.10"
+DEVICE = "server"
 
-'''
-def output:
-    network_test.
-'''
+def output():
+    logging.debug("output function")
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 logging.debug(network.SERVER_HOST)
-network.SERVER_HOST = LOCAL_IP
+network.SERVER_HOST = SERVER_IP
 logging.debug(network.SERVER_HOST)
 
 network_test = network.Connection()
 logging.debug(network_test.isConnected())
-#network_test.wait(whenHearCall=output)
+if DEVICE == "server":
+    network_test.wait(whenHearCall=output)
+else:
+    network_test.call(SERVER_IP, whenHearCall=output)
+
 while True:
     time.sleep(2)
     logging.debug(network_test.isConnected())
