@@ -1,4 +1,4 @@
-#run with tcp_server_multithreaad
+#run with tcp_server_multithread
 
 import socket
 import threading
