@@ -48,12 +48,15 @@ class stateMachineControl(object):
             self._killFlag = threading.Event()
             self.control = control
             self.sock = zmqSock
+            self.poller = zmq.Poller()
+            self.poller.register(self.sock, zmq.POLLIN)
 
         def run(self):
             while not self._killFlag.is_set():
-                message = self.sock.recv_json()
-                self.control.rawData.updateEntry(message[0], message[1])
-                self.control.inputLogicQueue.put(message[0])
+                if self.poller.poll(1000):
+                    message = self.sock.recv_json()
+                    self.control.rawData.updateEntry(message[0], message[1])
+                    self.control.inputLogicQueue.put(message[0])
 
         def stop(self):
             self._killFlag.set()
@@ -79,17 +82,20 @@ class stateMachineControl(object):
             threading.Thread.__init__(self)
             self._killFlag = threading.Event()
             self.control = control
-
+            #self.daemon = True
         def run(self):
             while not self._killFlag.is_set():
-                dataName = self.control.inputLogicQueue.get(block=True)
-                inputStateNameList = self.control.inputLogicNameByDataName[dataName]
+                try:
+                    dataName = self.control.inputLogicQueue.get(True, 1.0)
+                    inputStateNameList = self.control.inputLogicNameByDataName[dataName]
 
-                for inputStateName in inputStateNameList:
-                    if self.control.setStateInputLogic(inputStateName, dataName):
-                        self.control.inputLogicHasBeenUpdated.set()
-                        self.control.inputLogicHasBeenUpdated.clear()
-                self.control.inputLogicQueue.task_done()
+                    for inputStateName in inputStateNameList:
+                        if self.control.setStateInputLogic(inputStateName, dataName):
+                            self.control.inputLogicHasBeenUpdated.set()
+                    self.control.inputLogicQueue.task_done()
+
+                except Queue.Empty:
+                    pass
 
         def stop(self):
             self._killFlag.set()
@@ -114,14 +120,14 @@ class stateMachineControl(object):
             threading.Thread.__init__(self)
             self._killFlag = threading.Event()
             self.control = control
-            self.daemon = True
+            #self.daemon = True
 
         def run(self):
             while not self._killFlag.is_set():
-                self.control.inputLogicHasBeenUpdated.wait()
-                if self.control.setNextState():
-                    self.control.stateHasChanged.set()
-                    self.control.stateHasChanged.clear()
+                if self.control.inputLogicHasBeenUpdated.wait(5.0):
+                    self.control.inputLogicHasBeenUpdated.clear()
+                    if self.control.setNextState():
+                        self.control.stateHasChanged.set()
 
         def stop(self):
             self._killFlag.set()
@@ -147,13 +153,16 @@ class stateMachineControl(object):
             self._killFlag = threading.Event()
             self.control = control
             self.sock = zmqSock
-            self.daemon = True
+            self.poller = zmq.Poller()
+            self.poller.register(self.sock, zmq.POLLOUT)
 
         def run(self):
             while not self._killFlag.is_set():
-                self.control.stateHasChanged.wait()
-                print "state has changed - sending to slaves - Current State: %s" %self.control.currentState
-                self.sock.send_json(["state", self.control.currentState])
+                if self.control.stateHasChanged.wait(5.0):
+                    self.control.stateHasChanged.clear()
+                    print "state has changed - sending to slaves - Current State: %s" %self.control.currentState
+                    if self.poller.poll(1000):
+                        self.sock.send_json(["state", self.control.currentState])
 
         def stop(self):
             self._killFlag.set()
@@ -183,14 +192,14 @@ class stateMachineControl(object):
         """
 
         self.currentState = setInitialState
-        
+
         #events for notifying threads of data changes
         self.inputLogicHasBeenUpdated = threading.Event()
         self.stateHasChanged = threading.Event()
-        
+
         #storage for raw data
         self.rawData = dataController.dataController()
-        
+
         #work queue
         self.inputLogicQueue = Queue.Queue()
 
@@ -229,10 +238,10 @@ class stateMachineControl(object):
             #currentstate is the active state and the validTransitionState
             #is a possible state that can be transitioned to from the current
             #active state. Accessing the key yields a list of known input logic
-            #variables and the state, or boolean value (0 or 1), which must be
-            #true for the corresponding real boolean value that exists in the 
-            #inputLogicState hash table, which is intiliazed in the next section,
-            #and constantly updated by the consumerThread.
+            #variables and their state, or boolean value (0 or 1), which must equal
+            #the values of the current boolean values found in the 
+            #hash table, inputLogicState, (which is intiliazed in the next section,
+            #and constantly updated by the consumerThread), for the transition to take place.
             self.stateTransitionLogic = {}
             arr = []
             for key,val in stateJSON.items():
@@ -315,19 +324,26 @@ class stateMachineControl(object):
         self.broadcastStateThread.start()
 
     def stopThreads(self):
-        """stops all threads
-        
-        TODO:
-            figure out how to kill threads more effectively and
-            forgo the daemon status used to avoid script hanging
-            on exit.
-        """
-        self.consumerThread.stop()
+        """stops all threads"""
+        print "killing incoming data thread.."
         self.incomingDataThread.stop()
-        self.stateUpdateThread.stop()
-        self.broadcastStateThread.stop()
-        self.consumerThread.join()
         self.incomingDataThread.join()
+        print "done"
+
+        print "killing consumer thread.."
+        self.consumerThread.stop()
+        self.consumerThread.join()
+        print "done"
+
+        print "killing state update thread.."
+        self.stateUpdateThread.stop()
+        self.stateUpdateThread.join()
+        print "done"
+
+        print "killing broadcast thread.."
+        self.broadcastStateThread.stop()
+        self.broadcastStateThread.join()
+        print "done..Goodbye"
 
     def setNextState(self):
         """Sets the next state if the transition logic is detected.
@@ -338,8 +354,8 @@ class stateMachineControl(object):
         and so will be the more critical logic that detects a system failure,
         or logic that allows for transition to a custom state such as a manual
         override mode. Once the "all" conditions have been considered, the 
-        function moves on the state transition logic by current state is evaluated
-        if possible.
+        function moves on to the state transition logic by current state,
+        and is evaluated if possible.
 
         Returns:
             True is the state has changed
@@ -477,7 +493,10 @@ if __name__ == "__main__":
     #dataConsumer = dataConsumerThread(master, master.inputLogicQueue)
     exitFlag = 0
     while True:
-        exitFlag = input()
-        if exitFlag == 1:
-            master.stopThreads()
-            sys.exit()
+        try:
+            exitFlag = input()
+            if exitFlag == 1:
+                master.stopThreads()
+                sys.exit()
+        except (SyntaxError, NameError):
+            pass
