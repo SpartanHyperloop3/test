@@ -1,0 +1,61 @@
+{
+	"1" : {
+		"function" : [{ 
+			"name" : "printState",
+			"arguments" : [1],
+			"threaded" : 0
+			},
+			{
+			"name" : "accelerationSetPoint",
+			"arguments" : ["input1", "input2"],
+			"threaded" : 1
+			}],
+		"GPIO" : 
+		[
+			[18, 1],
+			[8, 0],
+			[24, 0]
+		],
+		"PWM" : 
+		[
+			[17, 50],
+			[12, 130]
+		]
+	},
+	"2" : {
+		"function" : [{ 
+			"name" : "printState",
+			"arguments" : [1],
+			"threaded" : 0
+			}],
+		"GPIO" : 
+		[
+			[18, 0],
+			[8, 1],
+			[24, 0]
+		],
+		"PWM" : 
+		[
+			[17, 50, 50],
+			[12, 130, 50]
+		]
+	},
+	"13" : {
+		"function" : [{ 
+			"name" : "printState",
+			"arguments" : [1],
+			"threaded" : 0
+			}],
+		"GPIO" : 
+		[
+			[18, 1],
+			[8, 1],
+			[24, 1]
+		],
+		"PWM" : 
+		[
+			[17, 50],
+			[12, 130]
+		]
+	}
+}

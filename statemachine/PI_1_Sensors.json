@@ -1,0 +1,28 @@
+{ 
+	"PI_1_U1_CH1" : {
+		"type" : "analog",
+		"sample_rate" : 0.01,
+		"location" : [105, 16]
+	}, 
+	"PI_1_U1_CH2" : {
+		"type" : "analog",
+		"sample_rate" : 0.01,
+		"location" : [105, 48]
+	},  
+	"PI_1_U1_CH3" : {
+		"type" : "analog",
+		"sample_rate" : 0.01,
+		"location" : [105, 80]
+	},   
+	"PI_1_U1_CH4" : {
+		"type" : "analog",
+		"sample_rate" : 0.01,
+		"location" : [105, 112]
+	},
+	"Emergency_Override" : {
+		"type" : "digital",
+		"PUD" : "PUD_UP",
+		"location" : 7
+	}
+
+}

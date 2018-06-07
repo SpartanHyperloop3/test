@@ -1,0 +1,72 @@
+{
+	"motor_temp" : [ 0, { 
+		"typeOfLogic" : "range",
+		"raw_data_units" : "volts",
+		"raw_data_names" : {
+			"PI_1_U1_CH1" : {
+				"digital" : 0,
+				"params" : [0.0, 1.0]
+			},
+			"PI_1_U1_CH2" : {
+				"digital" : 0,
+				"params" : [0.0, 0.5]
+			}
+		}
+
+	} ],
+	"motor_temp_too_hot" : [ 0, { 
+		"typeOfLogic" : "range",
+		"raw_data_units" : "volts",
+		"raw_data_names" : {
+			"PI_1_U1_CH1" : {
+				"digital" : 0,
+				"params" : [0.0,1.9] 
+			},
+			"PI_1_U1_CH2" : {
+				"digital" : 0,
+				"params" : [0.0, 0.5]
+			}
+		}
+
+	} ],
+	"batt_A_voltage" : [ 0, {
+		"typeOfLogic" : "range",
+		"raw_data_units" : "volts",
+		"raw_data_names" : {
+			"PI_1_U1_CH3" : {
+				"digital" : 0,
+				"params" : [0.0, 1.0]
+			}
+		}
+	} ],
+	"batt_A_temp" : [ 0, {
+		"typeOfLogic" : "range",
+		"raw_data_units" : "volts",
+		"raw_data_names" : {
+			"PI_1_U1_CH4" : {
+				"digital" : 0,
+				"params" : [0, 1.0]
+			}
+		}
+	} ],
+	"network_watchdog_PI_1" : [ 0, {
+		"typeOfLogic" : "boolean",
+		"raw_data_units" : "bool",
+		"raw_data_names" : {
+		}
+	} ],
+	"manual_enter_emergency_state" : [ 0, {
+		"typeOfLogic" : "boolean_XOR",
+		"raw_data_units" : "bool",
+		"raw_data_names" : {
+
+		}
+	} ],
+	"Emergency_Override" : [ 0, {
+		"typeOfLogic" : "boolean_XOR",
+		"raw_data_units" : "bool",
+		"raw_data_names" : {
+
+		}
+	} ]
+}
