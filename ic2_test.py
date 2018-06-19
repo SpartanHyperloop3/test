@@ -51,9 +51,12 @@ bus = smbus.SMBus(1)
 desired_write_command = COMMAND_EEPROM_ACCESS_MASK | EMISSIVITY
 #write 0
 bus.write_word_data(DEVICE_ADDRESS, desired_write_command, 0)
+time.sleep(1)
 #write actual
 bus.write_word_data(DEVICE_ADDRESS, desired_write_command, OBJECT_EMISSIVITY)
+time.sleep(1)
 print(bus.read_word_data(DEVICE_ADDRESS, desired_write_command))
+time.sleep(1)
 
 #figure out how to have multiple temp sensors on one i2c bus (page 14)
 
