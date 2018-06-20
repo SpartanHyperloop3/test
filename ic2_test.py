@@ -1,6 +1,3 @@
-import smbus
-import time
-
 '''
 MLX90614 Thermometer
 -Only read_word_data and write_word_data are supported by MLX90614 thermometers
@@ -20,13 +17,16 @@ MLX90614 Thermometer
 -max frequency is 100 kHz and min is 10 kHz
 '''
 
+import smbus
+import time
+
 #default i2c address
 DEVICE_ADDRESS = 0x5A
 
-#command masks
-COMMAND_RAM_ACCESS_MASK = 0b00000000
-COMMAND_EEPROM_ACCESS_MASK = 0b00100000
-COMMAND_READ_FLAGS = 0b11110000
+#register address masks
+RAM_ACCESS_MASK = 0b00000000
+EEPROM_ACCESS_MASK = 0b00100000
+READ_FLAGS = 0b11110000
 
 #RAM addresses
 DATA_IR_CHANNEL_1 = 0x04
@@ -37,32 +37,38 @@ T_OBJ1 = 0x07 # object temp Toreg * 0.02 = temp in kelvin | MSB is an error flag
 SMBUS = 0x0E
 EMISSIVITY = 0x04
 
+#commands
+ir_temp_register = RAM_ACCESS_MASK | T_OBJ1
+ambient_temp_register = RAM_ACCESS_MASK | TA
+emissivity_register = EEPROM_ACCESS_MASK | EMISSIVITY
+smbus_register = EEPROM_ACCESS_MASK | SMBUS
+flags_register = READ_FLAGS
+
 #emissivity
 PAPER_EMISSIVITY = 0.68
 OBJECT_EMISSIVITY = int(round(65535 * PAPER_EMISSIVITY))
 
-#command choice
-desired_read_command = COMMAND_RAM_ACCESS_MASK | T_OBJ1
-#desired_read_command = COMMAND_RAM_ACCESS_MASK | TA
-
 bus = smbus.SMBus(1)
 
+'''
 #change emissivity - NOT WORKING RIGHT NOW
-desired_write_command = COMMAND_EEPROM_ACCESS_MASK | EMISSIVITY
 #write 0
-bus.write_word_data(DEVICE_ADDRESS, desired_write_command, 0)
+bus.write_word_data(DEVICE_ADDRESS, emissivity_register, 0x0000)
+print(bin(bus.read_word_data(DEVICE_ADDRESS, flags_register)))
+print('hi')
 time.sleep(1)
 #write actual
-bus.write_word_data(DEVICE_ADDRESS, desired_write_command, OBJECT_EMISSIVITY)
+bus.write_word_data(DEVICE_ADDRESS, emissivity_register, OBJECT_EMISSIVITY)
 time.sleep(1)
-print(bus.read_word_data(DEVICE_ADDRESS, desired_write_command))
+print(bus.read_word_data(DEVICE_ADDRESS, emissivity_register))
 time.sleep(1)
+'''
 
 #figure out how to have multiple temp sensors on one i2c bus (page 14)
 
 #read in temp value
 while (True):
-    result = bus.read_word_data(DEVICE_ADDRESS, desired_read_command)
+    result = bus.read_word_data(DEVICE_ADDRESS, ir_temp_register)
     #print(bin(result))
     #print(hex(result))
     #print(result)
