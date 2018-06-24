@@ -2,7 +2,7 @@ import threading
 import os
 import time
 
-class NetworkWatchdogSslave(threading.Thread):
+class NetworkWatchdogSlave(threading.Thread):
 
     """
     Pings the master pi periodically to check for network disconnection, thus working as a co-master.
