@@ -1,4 +1,19 @@
+"""change send_json format, 
+check if while loop is needed for continuous sending of json
+"""
+
+
+
+
 from tkinter import Tk, Label, Button
+import sys
+import zmq
+import time
+
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.bind('tcp://127.0.0.1:2000')
+
 
 class ControlButtonGUI:
     def __init__(self, master):
@@ -38,29 +53,37 @@ class ControlButtonGUI:
 
 
     def test_sensors(self):
-        print("Send state 1")
+        print("Sending state 1")
+        socket.send_json(["1"])                #another json for master, or change the value for the key here
 
 
     def test_actuators(self):
-        print("Send state 14")
+        print("Sending state 14")
+        socket.send_json(["14"])
 
     def enter_track(self):
-        print("Send state 2")
+        print("Sending state 2")
+        socket.send_json(["2"])
 
     def exit_track(self):
-        print("Send state 10")
+        print("Sending state 10")
+        socket.send_json(["10"])
 
     def shutdown(self):
-        print("Send state 11")
+        print("Sendinng state 11")
+        socket.send_json(["11"])
 
     def wait(self):
-        print("Send state 17")
+        print("Sending state 17")
+        socket.send_json(["17"])
 
     def manual_operation(self):
-        print("Send state 54")
+        print("Sending state 54")
+        socket.send_json(["54"])
 
     def emergency(self):
-        print("Send state 13")
+        print("Sending state 13")
+        socket.send_json(["13"])
 
 root = Tk()
 my_gui = ControlButtonGUI(root)
