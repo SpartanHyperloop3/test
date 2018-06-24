@@ -2,10 +2,10 @@ import threading
 import os
 import time
 
-class NetworkWatchdog(threading.Thread):
+class NetworkWatchdogMaster(threading.Thread):
 
     """
-    Pings each of the slave pi's periodically to check for network disconnection
+    Pings each of the slave pi's and the off-pod laptop periodically to check for network disconnection
     In case of a single point of error, emergency command to the slaves is sent.
     """
 
@@ -15,7 +15,7 @@ class NetworkWatchdog(threading.Thread):
         self.control = control
 
     def run(self):
-        ips_list = ["192.168.3.14", "192.168.3.15", "192.168.3.16", "192.168.3.17"]
+        ips_list = ["192.168.3.14", "192.168.3.15", "192.168.3.16", "192.168.3.17", "192.168.0.0"]
         while not self._killFlag.is_set():
             try:
                 for ip in ips_list:
