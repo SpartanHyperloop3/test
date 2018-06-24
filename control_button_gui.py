@@ -54,12 +54,12 @@ class ControlButtonGUI:
 
     def test_sensors(self):
         print("Sending state 1")
-        socket.send_json(["1"])                #another json for master, or change the value for the key here
+        socket.send_json(["1"])               
 
 
     def test_actuators(self):
         print("Sending state 14")
-        socket.send_json(["14"])
+        socket.send_json(["laptop":{"state": "14"}])         #another json for master, or change the format here
 
     def enter_track(self):
         print("Sending state 2")
