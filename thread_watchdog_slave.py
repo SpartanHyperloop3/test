@@ -15,13 +15,13 @@ class NetworkWatchdogSslave(threading.Thread):
         self.control = control
 
     def run(self):
-        ips_list = ["192.168.3.13"]                         #enter the masterr's ip
+        ips_list = ["192.168.3.13"]                         #enter the master's ip
         while not self._killFlag.is_set():
             try:
                 for ip in ips_list:
                     response = os.system("ping -i 1 -n 1 -l 1 " + ip + " -w 5")
                     time.sleep(1)
-                    if response == 0:
+                    if response == 0:                       #change print function to broadcast state 13
                         print(ip, 'is up!')
                     else:                                   #remove else once if function is done
                         print(ip, 'is down!')
