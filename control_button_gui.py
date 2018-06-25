@@ -54,36 +54,68 @@ class ControlButtonGUI:
 
     def test_sensors(self):
         print("Sending state 1")
-        socket.send_json(["1"])               
+        socket.send_json(["PC": {
+        "reading": 1,
+        "time": null,
+        "units": "PC"
+        }])               
 
 
     def test_actuators(self):
         print("Sending state 14")
-        socket.send_json(["laptop":{"state": "14"}])         #another json for master, or change the format here
+        socket.send_json(["PC": {
+        "reading": 14,
+        "time": null,
+        "units": "PC"
+        }])                        #another json for master, or change the format here
 
     def enter_track(self):
         print("Sending state 2")
-        socket.send_json(["2"])
+        socket.send_json(["PC": {
+        "reading": 2,
+        "time": null,
+        "units": "PC"
+        }])
 
     def exit_track(self):
         print("Sending state 10")
-        socket.send_json(["10"])
+        socket.send_json(["PC": {
+        "reading": 10,
+        "time": null,
+        "units": "PC"
+        }])
 
     def shutdown(self):
         print("Sendinng state 11")
-        socket.send_json(["11"])
+        socket.send_json(["PC": {
+        "reading": 11,
+        "time": null,
+        "units": "PC"
+        }])
 
     def wait(self):
         print("Sending state 17")
-        socket.send_json(["17"])
+        socket.send_json(["PC": {
+        "reading": 17,
+        "time": null,
+        "units": "PC"
+        }])
 
     def manual_operation(self):
         print("Sending state 54")
-        socket.send_json(["54"])
+        socket.send_json(["PC": {
+        "reading": 54,
+        "time": null,
+        "units": "PC"
+        }])
 
     def emergency(self):
         print("Sending state 13")
-        socket.send_json(["13"])
+        socket.send_json(["PC": {
+        "reading": 13,
+        "time": null,
+        "units": "PC"
+        }])
 
 root = Tk()
 my_gui = ControlButtonGUI(root)
