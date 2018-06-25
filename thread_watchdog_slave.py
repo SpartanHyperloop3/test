@@ -21,9 +21,9 @@ class NetworkWatchdogSlave(threading.Thread):
                 for ip in ips_list:
                     response = os.system("ping -i 1 -n 1 -l 1 " + ip + " -w 5")
                     time.sleep(1)
-                    if response == 0:                       #change print function to broadcast state 13
-                        print(ip, 'is up!')
-                    else:                                   #remove else once if function is done
+                    if response == 0:                       
+                        pass
+                    else:                                   #change print function to broadcast state 13
                         print(ip, 'is down!')
 
 
