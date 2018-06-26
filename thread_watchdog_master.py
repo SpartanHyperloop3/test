@@ -25,6 +25,12 @@ class NetworkWatchdogMaster(threading.Thread):
                         pass
                     else:                                   #change print function to broadcast state 13
                         print(ip, 'is down!')
+                        socket.send_json(["Master": {    #probaly like this? Add direct switch off command
+                        "reading": 13,
+                        "time": null,
+                        "units": "StateChange"
+                        }])
+
 
 
 #for self-class test, uncomment:
