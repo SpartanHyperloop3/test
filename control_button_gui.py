@@ -18,7 +18,7 @@ socket.bind('tcp://127.0.0.1:2000')
 class ControlButtonGUI:
     def __init__(self, master):
         self.master = master
-        master.title("A simple GUI")
+        master.title("Off-pod Control System")
 
         self.label = Label(master, text="This is a Control button GUI!")
         self.label.pack()
