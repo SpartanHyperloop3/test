@@ -57,7 +57,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 1,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])               
 
 
@@ -66,7 +66,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 14,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])                        #another json for master, or change the format here
 
     def enter_track(self):
@@ -74,7 +74,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 2,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])
 
     def exit_track(self):
@@ -82,7 +82,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 10,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])
 
     def shutdown(self):
@@ -90,7 +90,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 11,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])
 
     def wait(self):
@@ -106,7 +106,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 54,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])
 
     def emergency(self):
@@ -114,7 +114,7 @@ class ControlButtonGUI:
         socket.send_json(["PC": {
         "reading": 13,
         "time": null,
-        "units": "PC"
+        "units": "StateChange"
         }])
 
 root = Tk()
