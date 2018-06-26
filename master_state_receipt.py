@@ -46,7 +46,7 @@ class incomingDataThread(threading.Thread):
             if self.poller.poll(1000):
                 message = self.sock.recv_json()
 
-                if self.control.rawDataUnits["PC"]!="PC":
+                if self.control.rawDataUnits["PC"] == "StateChange" or self.control.rawDataUnits["Co-master"] == "StateChange":
                     self.sock.send_json(["state", self.control.rawDataReading["PC"]])
                 else:
                     # print self.control.rawData.getCurrentReadingFor("PI_1_U1_CH4")
