@@ -49,6 +49,7 @@ PAPER_EMISSIVITY = 0.68
 OBJECT_EMISSIVITY = int(round(65535 * PAPER_EMISSIVITY))
 
 bus = smbus.SMBus(1)
+bus.pec = True
 
 '''
 #change emissivity - NOT WORKING RIGHT NOW
@@ -68,9 +69,11 @@ time.sleep(1)
 
 #read in temp value
 while (True):
-    result = bus.read_word_data(DEVICE_ADDRESS, ir_temp_register)
+    #result = bus.read_word_data(DEVICE_ADDRESS, ir_temp_register)
+    bus.write_word_data(DEVICE_ADDRESS, emissivity_register, 0x0000)
+    #bus.read_word_data(DEVICE_ADDRESS, emissivity_register)
     #print(bin(result))
     #print(hex(result))
     #print(result)
-    print(result * 0.02 - 273.15)
+    #print(result * 0.02 - 273.15)
     time.sleep(1)
