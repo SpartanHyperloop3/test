@@ -46,34 +46,32 @@ flags_register = READ_FLAGS
 
 #emissivity
 PAPER_EMISSIVITY = 0.68
-OBJECT_EMISSIVITY = int(round(65535 * PAPER_EMISSIVITY))
+HUMAN_EMISSIVITY = 0.97
+#OBJECT_EMISSIVITY = int(round(65535 * PAPER_EMISSIVITY))
+OBJECT_EMISSIVITY = int(round(65535 * HUMAN_EMISSIVITY))
 
 bus = smbus.SMBus(1)
 bus.pec = True
 
-'''
-#change emissivity - NOT WORKING RIGHT NOW
+#change emissivity
 #write 0
 bus.write_word_data(DEVICE_ADDRESS, emissivity_register, 0x0000)
-print(bin(bus.read_word_data(DEVICE_ADDRESS, flags_register)))
-print('hi')
 time.sleep(1)
 #write actual
 bus.write_word_data(DEVICE_ADDRESS, emissivity_register, OBJECT_EMISSIVITY)
 time.sleep(1)
-print(bus.read_word_data(DEVICE_ADDRESS, emissivity_register))
-time.sleep(1)
-'''
 
 #figure out how to have multiple temp sensors on one i2c bus (page 14)
+bus.write_word_data(DEVICE_ADDRESS, smbus_register, 0x0000)
+time.sleep(1)
+bus.write_word_data(DEVICE_ADDRESS, smbus_register, 0x5a)
+time.sleep(1)
 
 #read in temp value
 while (True):
-    #result = bus.read_word_data(DEVICE_ADDRESS, ir_temp_register)
-    bus.write_word_data(DEVICE_ADDRESS, emissivity_register, 0x0000)
-    #bus.read_word_data(DEVICE_ADDRESS, emissivity_register)
+    result = bus.read_word_data(DEVICE_ADDRESS, ir_temp_register)
     #print(bin(result))
     #print(hex(result))
     #print(result)
-    #print(result * 0.02 - 273.15)
+    print(result * 0.02 - 273.15)
     time.sleep(1)
